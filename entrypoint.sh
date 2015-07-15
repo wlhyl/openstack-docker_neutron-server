@@ -71,7 +71,7 @@ if [ ! -f /etc/neutron/.complete ];then
     $CRUDINI --set /etc/neutron/neutron.conf keystone_authtoken project_domain_id default
     $CRUDINI --set /etc/neutron/neutron.conf keystone_authtoken user_domain_id default
     $CRUDINI --set /etc/neutron/neutron.conf keystone_authtoken project_name service
-    $CRUDINI --set /etc/neutron/neutron.conf keystone_authtoken username netron
+    $CRUDINI --set /etc/neutron/neutron.conf keystone_authtoken username neutron
     $CRUDINI --set /etc/neutron/neutron.conf keystone_authtoken password $NEUTRON_PASS
     
     $CRUDINI --set /etc/neutron/neutron.conf DEFAULT core_plugin ml2

@@ -51,7 +51,7 @@ CONNECTION=mysql://neutron:$NEUTRON_DBPASS@$NEUTRON_DB/neutron
 if [ ! -f /etc/neutron/.complete ];then
     cp -rp /neutron/* /etc/neutron
 
-    chown neutron:neutron /var/log/netron/
+    chown neutron:neutron /var/log/neutron/
     
     $CRUDINI --set /etc/neutron/neutron.conf database connection $CONNECTION
 

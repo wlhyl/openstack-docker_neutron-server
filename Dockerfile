@@ -19,14 +19,14 @@ RUN env --unset=DEBIAN_FRONTEND
 RUN cp -rp /etc/neutron/ /neutron
 RUN rm -rf /var/log/neutron/*
 
-VOLUME ["/etc/nova"]
-VOLUME ["/var/log/nova"]
+VOLUME ["/etc/neutron"]
+VOLUME ["/var/log/neutron"]
 
 ADD entrypoint.sh /usr/bin/entrypoint.sh
 RUN chmod +x /usr/bin/entrypoint.sh
 
-ADD nova-api.conf /etc/supervisor/conf.d/neutron-server.conf
+ADD neutron-server.conf /etc/supervisor/conf.d/neutron-server.conf
 
-EXPOSE 8774
+EXPOSE 9696
 
 ENTRYPOINT ["/usr/bin/entrypoint.sh"]

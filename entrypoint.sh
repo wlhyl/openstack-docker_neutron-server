@@ -74,8 +74,8 @@ if [ ! -f /etc/neutron/.complete ];then
     $CRUDINI --set /etc/neutron/neutron.conf keystone_authtoken username neutron
     $CRUDINI --set /etc/neutron/neutron.conf keystone_authtoken password $NEUTRON_PASS
     
-    $CRUDINI --set /etc/neutron/neutron.conf DEFAULT core_plugin neutron.plugins.ml2.plugin:Ml2Plugin
-    $CRUDINI --set /etc/neutron/neutron.conf DEFAULT service_plugins neutron.services.l3_router.l3_router_plugin:L3RouterPlugin
+    $CRUDINI --set /etc/neutron/neutron.conf DEFAULT core_plugin neutron.plugins.ml2.plugin
+    $CRUDINI --set /etc/neutron/neutron.conf DEFAULT service_plugins neutron.services.l3_router.l3_router_plugin
     $CRUDINI --set /etc/neutron/neutron.conf DEFAULT allow_overlapping_ips True
     
     $CRUDINI --set /etc/neutron/neutron.conf DEFAULT notify_nova_on_port_status_changes True

@@ -29,8 +29,13 @@ if [ -z "$RABBIT_PASSWORD" ];then
   exit 1
 fi
 
-if [ -z "$KEYSTONE_ENDPOINT" ];then
-  echo "error: KEYSTONE_ENDPOINT not set"
+if [ -z "$KEYSTONE_INTERNAL_ENDPOINT" ];then
+  echo "error: KEYSTONE_INTERNAL_ENDPOINT not set"
+  exit 1
+fi
+
+if [ -z "$KEYSTONE_ADMIN_ENDPOINT" ];then
+  echo "error: KEYSTONE_ADMIN_ENDPOINT not set"
   exit 1
 fi
 
@@ -39,9 +44,14 @@ if [ -z "$NEUTRON_PASS" ];then
   exit 1
 fi
 
-# NOVA_URL pillar['nova']['endpoint']
+# NOVA_URL pillar['nova']['INTERNAL_ENDPOINT']
 if [ -z "$NOVA_URL" ];then
   echo "error: NOVA_URL not set. user nova password."
+  exit 1
+fi
+
+if [ -z "$REGION_NAME" ];then
+  echo "error: REGION_NAME not set."
   exit 1
 fi
 
@@ -50,8 +60,6 @@ CRUDINI='/usr/bin/crudini'
 CONNECTION=mysql://neutron:$NEUTRON_DBPASS@$NEUTRON_DB/neutron
 if [ ! -f /etc/neutron/.complete ];then
     cp -rp /neutron/* /etc/neutron
-
-    chown neutron:neutron /var/log/neutron/
     
     $CRUDINI --set /etc/neutron/neutron.conf database connection $CONNECTION
 
@@ -65,8 +73,8 @@ if [ ! -f /etc/neutron/.complete ];then
 
     $CRUDINI --del /etc/neutron/neutron.conf keystone_authtoken
 
-    $CRUDINI --set /etc/neutron/neutron.conf keystone_authtoken auth_uri http://$KEYSTONE_ENDPOINT:5000
-    $CRUDINI --set /etc/neutron/neutron.conf keystone_authtoken auth_url http://$KEYSTONE_ENDPOINT:35357
+    $CRUDINI --set /etc/neutron/neutron.conf keystone_authtoken auth_uri http://$KEYSTONE_INTERNAL_ENDPOINT:5000
+    $CRUDINI --set /etc/neutron/neutron.conf keystone_authtoken auth_url http://$KEYSTONE_ADMIN_ENDPOINT:35357
     $CRUDINI --set /etc/neutron/neutron.conf keystone_authtoken auth_plugin password
     $CRUDINI --set /etc/neutron/neutron.conf keystone_authtoken project_domain_id default
     $CRUDINI --set /etc/neutron/neutron.conf keystone_authtoken user_domain_id default
@@ -82,11 +90,11 @@ if [ ! -f /etc/neutron/.complete ];then
     $CRUDINI --set /etc/neutron/neutron.conf DEFAULT notify_nova_on_port_data_changes True
     $CRUDINI --set /etc/neutron/neutron.conf DEFAULT nova_url http://${NOVA_URL}:8774/v2
     
-    $CRUDINI --set /etc/neutron/neutron.conf nova auth_url http://$KEYSTONE_ENDPOINT:35357
+    $CRUDINI --set /etc/neutron/neutron.conf nova auth_url http://$KEYSTONE_ADMIN_ENDPOINT:35357
     $CRUDINI --set /etc/neutron/neutron.conf nova auth_plugin password
     $CRUDINI --set /etc/neutron/neutron.conf nova project_domain_id default
     $CRUDINI --set /etc/neutron/neutron.conf nova user_domain_id default
-    $CRUDINI --set /etc/neutron/neutron.conf nova region_name regionOne
+    $CRUDINI --set /etc/neutron/neutron.conf nova region_name $REGION_NAME
     $CRUDINI --set /etc/neutron/neutron.conf nova project_name service
     $CRUDINI --set /etc/neutron/neutron.conf nova username nova
     $CRUDINI --set /etc/neutron/neutron.conf nova password $NOVA_PASS
@@ -111,5 +119,7 @@ if [ $? != 0 ];then
     su -s /bin/sh -c "neutron-db-manage --config-file /etc/neutron/neutron.conf \
   --config-file /etc/neutron/plugins/ml2/ml2_conf.ini upgrade head" neutron
 fi
+
+chown -R neutron:neutron /var/log/neutron/
 
 /usr/bin/supervisord -n

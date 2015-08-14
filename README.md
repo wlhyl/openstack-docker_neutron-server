@@ -5,15 +5,18 @@
 - RABBIT_HOST: rabbitmq IP
 - RABBIT_USERID: rabbitmq user
 - RABBIT_PASSWORD: rabbitmq user 的 password
-- KEYSTONE_ENDPOINT: keystone endpoint
+- KEYSTONE_INTERNAL_ENDPOINT: keystone internal endpoint
+- KEYSTONE_ADMIN_ENDPOINT: keystone admin endpoint
 - NEUTRON_PASS: openstack neutron密码
-- NOVA_URL: nova endpoint
+- NOVA_URL: nova internal endpoint
+- REGION_NAME: RegionOne
 
 # volumes:
 - /opt/openstack/neutron-server/: /etc/neutron
 - /opt/openstack/log/neutron-server/: /var/log/neutron/
 
 # 启动nova-api
+```bash
 docker run -d --name neutron-server -p 9696:9696 \
     -v /opt/openstack/neutron-server/:/etc/neutron \
     -v /opt/openstack/log/neutron-server/:/var/log/neutron/ \
@@ -23,7 +26,10 @@ docker run -d --name neutron-server -p 9696:9696 \
     -e RABBIT_HOST=10.64.0.52 \
     -e RABBIT_USERID=openstack \
     -e RABBIT_PASSWORD=openstack \
-    -e KEYSTONE_ENDPOINT=10.64.0.52 \
+    -e KEYSTONE_INTERNAL_ENDPOINT=10.64.0.52 \
+    -e KEYSTONE_ADMIN_ENDPOINT=10.64.0.52 \
     -e NEUTRON_PASS=neutron_pass \
     -e NOVA_URL=10.64.0.52 \
+    -e REGION_NAME=RegionOne \
     10.64.0.50:5000/lzh/neutron-server:kilo
+```

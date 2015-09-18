@@ -113,13 +113,14 @@ if [ ! -f /etc/neutron/.complete ];then
     
     touch /etc/neutron/.complete
 fi
+
+chown -R neutron:neutron /var/log/neutron/
+
 # 同步数据库
 echo 'select * from agents limit 1;' | mysql -h$NEUTRON_DB  -uneutron -p$NEUTRON_DBPASS neutron
 if [ $? != 0 ];then
     su -s /bin/sh -c "neutron-db-manage --config-file /etc/neutron/neutron.conf \
   --config-file /etc/neutron/plugins/ml2/ml2_conf.ini upgrade head" neutron
 fi
-
-chown -R neutron:neutron /var/log/neutron/
 
 /usr/bin/supervisord -n

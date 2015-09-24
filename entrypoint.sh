@@ -90,6 +90,9 @@ if [ ! -f /etc/neutron/.complete ];then
     $CRUDINI --set /etc/neutron/neutron.conf DEFAULT notify_nova_on_port_data_changes True
     $CRUDINI --set /etc/neutron/neutron.conf DEFAULT nova_url http://${NOVA_URL}:8774/v2
     
+    # dhcp
+    $CRUDINI --set /etc/neutron/neutron.conf DEFAULT dhcp_agents_per_network 2
+    
     $CRUDINI --set /etc/neutron/neutron.conf nova auth_url http://$KEYSTONE_ADMIN_ENDPOINT:35357
     $CRUDINI --set /etc/neutron/neutron.conf nova auth_plugin password
     $CRUDINI --set /etc/neutron/neutron.conf nova project_domain_id default

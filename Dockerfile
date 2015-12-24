@@ -1,5 +1,5 @@
 # image name lzh/neutron-server:kilo
-FROM registry.lzh.site:5000/lzh/openstackbase:kilo
+FROM 10.64.0.50:5000/lzh/openstackbase:kilo
 
 MAINTAINER Zuhui Liu penguin_tux@live.com
 

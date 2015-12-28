@@ -3,18 +3,17 @@ FROM 10.64.0.50:5000/lzh/openstackbase:liberty
 
 MAINTAINER Zuhui Liu penguin_tux@live.com
 
-ENV BASE_VERSION 2015-12-24
+ENV BASE_VERSION 2015-12-28
 ENV OPENSTACK_VERSION liberty
-ENV BUILD_VERSION 2015-12-25
+ENV BUID_VERSION 2015-12-28
 
-RUN yum update -y
-RUN yum install -y openstack-neutron openstack-neutron-ml2
-RUN yum clean all
-RUN rm -rf /var/cache/yum/*
+RUN yum update -y && \
+         yum install -y openstack-neutron openstack-neutron-ml2 && \
+         rm -rf /var/cache/yum/*
 
-RUN cp -rp /etc/neutron/ /neutron
-RUN rm -rf /etc/neutron/*
-RUN rm -rf /var/log/neutron/*
+RUN cp -rp /etc/neutron/ /neutron && \
+         rm -rf /etc/neutron/* && \
+         rm -rf /var/log/neutron/*
 
 VOLUME ["/etc/neutron"]
 VOLUME ["/var/log/neutron"]

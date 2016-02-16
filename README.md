@@ -15,7 +15,7 @@
 - /opt/openstack/neutron-server/: /etc/neutron
 - /opt/openstack/log/neutron-server/: /var/log/neutron/
 
-# 启动nova-api
+# 启动neutron-server
 ```bash
 docker run -d --name neutron-server -p 9696:9696 \
     -v /opt/openstack/neutron-server/:/etc/neutron \
